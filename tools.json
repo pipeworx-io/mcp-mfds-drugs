@@ -1,0 +1,63 @@
+[
+  {
+    "name": "mfds_drug_search",
+    "description": "Search SOUTH KOREA's licensed medicines register (MFDS, Ministry of Food and Drug Safety; 식품의약품안전처 의약품통합정보) by Korean or English brand name, English active ingredient, or holder company: 한국 허가 의약품 검색. Returns per product: Korean and English brand name, holder, authorisation number and date, status (authorised / withdrawn / expired / cancelled), main ingredient, ATC code, prescription or OTC class, import or domestic. 15 per page, 1-based page. Zero matches returns empty_reason. Keyless. Example: mfds_drug_search({ query: \"타이레놀\" }) or mfds_drug_search({ query: \"acetaminophen\", by: \"ingredient\" })",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Korean brand (\"타이레놀\"), English brand (\"Tylenol\"), English ingredient (\"acetaminophen\") or holder company"
+        },
+        "by": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "name",
+            "ingredient",
+            "holder"
+          ],
+          "description": "What the query is. auto (default): Korean text = brand name; Latin text = English brand name, then English ingredient if none."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "all",
+            "authorised",
+            "withdrawn",
+            "expired",
+            "cancelled"
+          ],
+          "description": "Restrict by register status (default all)"
+        },
+        "limit": {
+          "type": "number",
+          "description": "Max results from the page, 1-15 (default and max 15: the register pages by 15)"
+        },
+        "page": {
+          "type": "number",
+          "description": "Page number, 1-based. Use next_page from the previous response."
+        }
+      },
+      "required": [
+        "query"
+      ]
+    }
+  },
+  {
+    "name": "mfds_drug_get",
+    "description": "Full MFDS record for one Korean licensed medicine, by item code (품목기준코드, from mfds_drug_search): brand names, holder, authorisation number and date, status, ATC code, appearance, assessment type (generic / new drug), every active ingredient with amount and unit, excipients, barcodes, and links to the official efficacy, dosage, precautions and consumer-summary documents. Unknown code returns found:false. Keyless. Example: mfds_drug_get({ id: \"202200658\" })",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "MFDS item code (품목기준코드), e.g. \"202200658\""
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  }
+]
